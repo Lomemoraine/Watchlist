@@ -1,13 +1,11 @@
 from flask import render_template,request,redirect,url_for
-from app.main import app
+from . import main
 from ..request import get_movies,get_movie,search_movie
-from ..models import reviews
 from .forms import ReviewForm
-Review = reviews.Review
-
+from ..models import Review
 
 # Views
-@app.route('/')
+@main.route('/')
 def index():
 
     '''
@@ -28,7 +26,7 @@ def index():
         return redirect(url_for('search',movie_name=search_movie))
     else:
         return render_template('index.html', title = title, popular = popular_movies, upcoming = upcoming_movie, now_showing = now_showing_movie )
-@app.route('/movie/<int:id>')# Dynamic routes <> default returns a string ,adding int we change the type
+@main.route('/movie/<int:id>')# Dynamic routes <> default returns a string ,adding int we change the type
 def movie(id):
 
     '''
@@ -40,7 +38,7 @@ def movie(id):
     # reviews = Review.get_reviews(movie.id)
 
     return render_template('movie.html',title = title,movie = movie,reviews = reviews)
-@app.route('/search/<movie_name>')
+@main.route('/search/<movie_name>')
 def search(movie_name):
     '''
     View function to display the search results
@@ -50,7 +48,7 @@ def search(movie_name):
     searched_movies = search_movie(movie_name_format)
     title = f'search results for {movie_name}'
     return render_template('search.html',movies = searched_movies)
-@app.route('/movie/review/new/<int:id>', methods = ['GET','POST'])
+@main.route('/movie/review/new/<int:id>', methods = ['GET','POST'])
 def new_review(id):
     form = ReviewForm()
     movie = get_movie(id)

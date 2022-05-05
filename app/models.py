@@ -1,3 +1,4 @@
+from . import db
 class Movie:
     '''
     Movie class to define Movie Objects
@@ -42,3 +43,20 @@ class Review:
                 response.append(review)
 
         return response
+class User(db.Model):#db.Model  This will connect our class to our database and allow communication
+    __tablename__ = 'users'
+    id = db.Column(db.Integer,primary_key = True)
+    username = db.Column(db.String(255))
+    role_id = db.Column(db.Integer,db.ForeignKey('roles.id'))#Relationship column to the Role table
+
+    def __repr__(self):# to make it easy to debug our application
+        return f'User {self.username}'
+class Role(db.Model):
+    __tablename__ = 'roles'
+
+    id = db.Column(db.Integer,primary_key = True)
+    name = db.Column(db.String(255))
+    users = db.relationship('User',backref = 'role',lazy="dynamic")# relationship column to the User table
+
+    def __repr__(self):
+        return f'User {self.name}'
